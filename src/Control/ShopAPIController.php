@@ -137,6 +137,8 @@ class ShopAPIController extends Controller
                 return $this->processResponse($item->addOrRemoveVariations());
             case 'move':
                 return $this->processResponse($item->move());
+            case 'moveVariation':
+                return $this->processResponse($item->moveVariations());
             default:
                 return $this->processResponse($this->cart->get());
         }
