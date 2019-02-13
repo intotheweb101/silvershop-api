@@ -1,8 +1,8 @@
 {
-    "name": "toastnz/silvershop-api",
+    "name": "intotheweb101/silvershop-api",
     "description": "Silverstripe Shop (SilverShop) API",
     "type": "silverstripe-vendormodule",
-    "homepage": "https://github.com/toastnz/silvershop-api",
+    "homepage": "https://github.com/intotheweb101/silvershop-api",
     "keywords": [
         "silverstripe",
         "ecommerce",
@@ -13,7 +13,7 @@
     "authors": [
         {
             "name": "SilverShop API Contributors",
-            "homepage": "https://github.com/toastnz/silvershop-api/graphs/contributors"
+            "homepage": "https://github.com/intotheweb101/silvershop-api/graphs/contributors"
         }
     ],
     "require": {
