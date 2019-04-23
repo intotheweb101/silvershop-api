@@ -131,10 +131,15 @@ class CartItemModel extends ShopModelBase
                     }
 
                     // Set the image
-                    if ($this->buyable->Image()) {
-                        $this->product_image = ImageModel::create($this->buyable->Image()->ID)->get();
+                    $imageId = $this->buyable->Image()->exists() ? $this->buyable->Image()->ID : false;
+                    if ($imageId) {
+                        $this->product_image = ImageModel::create($imageId)->get();
                     } else {
-                        $this->product_image = ImageModel::create(0)->get();
+                        if (Config::inst()->get(get_called_class(), 'image_fallback_product') && ($this->buyable instanceof Variation) && $this->buyable->Product()->exists() && $this->buyable->Product()->Image()->exists()) {
+                            $this->product_image = ImageModel::create($this->buyable->Product()->Image()->ID)->get();
+                        } else {
+                            $this->product_image = ImageModel::create(0)->get();
+                        }
                     }
 
                     // Set the categories
