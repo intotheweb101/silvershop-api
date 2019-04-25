@@ -22,8 +22,6 @@ class CartItemModel extends ShopModelBase
     /** @var Product|Variation $buyable */
     protected $buyable;
 
-    protected $endpoint;
-
     protected $item_id;
     protected $product_id;
     protected $title;
@@ -34,6 +32,7 @@ class CartItemModel extends ShopModelBase
     protected $remove_link;
     protected $remove_quantity_link;
     protected $remove_all_link;
+    protected $move_wishlist_link;
     protected $internal_item_id;
     protected $price;
     protected $price_nice;
@@ -56,6 +55,7 @@ class CartItemModel extends ShopModelBase
         'remove_link',
         'remove_quantity_link',
         'remove_all_link',
+        'move_wishlist_link',
         'internal_item_id',
         'price',
         'price_nice',
@@ -108,18 +108,20 @@ class CartItemModel extends ShopModelBase
                 $this->price_nice       = sprintf('%s%.2f', Config::inst()->get(Currency::class, 'currency_symbol'), $unitValue);
                 $this->total_price_nice = sprintf('%s%.2f', Config::inst()->get(Currency::class, 'currency_symbol'), $totalValue);
 
-                $this->endpoint = Controller::join_links(Director::absoluteBaseURL(), 'shop-api/cart/item', $this->item->ID);
+                $cartEndpoint = Controller::join_links(Director::absoluteBaseURL(), 'shop-api/cart/item', $this->item->ID);
+                $wishlistEndpoint = Controller::join_links(Director::absoluteBaseURL(), 'shop-api/wishlist', $this->item->ID);
 
                 if ($this->buyable && $this->buyable->exists()) {
                     $this->product_id = $this->buyable->ID;
                     $this->link       = $this->buyable->AbsoluteLink();
 
                     // Set API links
-                    $this->add_link             = Controller::join_links($this->endpoint, 'addOne');
-                    $this->remove_link          = Controller::join_links($this->endpoint, 'removeOne');
-                    $this->remove_all_link      = Controller::join_links($this->endpoint, 'removeAll');
-                    $this->add_quantity_link    = Controller::join_links($this->endpoint, 'removeQuantity');
-                    $this->remove_quantity_link = Controller::join_links($this->endpoint, 'addQuantity');
+                    $this->add_link             = Controller::join_links($cartEndpoint, 'addOne');
+                    $this->remove_link          = Controller::join_links($cartEndpoint, 'removeOne');
+                    $this->remove_all_link      = Controller::join_links($cartEndpoint, 'removeAll');
+                    $this->add_quantity_link    = Controller::join_links($cartEndpoint, 'removeQuantity');
+                    $this->remove_quantity_link = Controller::join_links($cartEndpoint, 'addQuantity');
+                    $this->move_wishlist_link   = Controller::join_links($wishlistEndpoint, 'move');
 
                     // Add variables
                     $variations = ($this->buyable instanceof Variation) ? $this->buyable->Product()->Variations() : $this->buyable->Variations();

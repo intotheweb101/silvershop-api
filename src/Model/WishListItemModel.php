@@ -141,18 +141,22 @@ class WishListItemModel extends ProductModel
         /** @var HTTPRequest $request */
         $request  = Injector::inst()->get(HTTPRequest::class);
         $session  = $request->getSession();
-        $wishList = $session->get('wishList');
+        $wishList = $session->get('wishList') ?: array();
 
         if ($this->item) {
 
+            
+
             // if already exists remove it
             if (in_array($this->item->ID, $wishList)) {
-                $key = array_search($this->item->ID, $wishList);
-                unset($wishList[$key]);
+                if (($key = array_search($this->item->ID, $wishList)) !== false) {
+                    unset($wishList[$key]);
+                }
+
                 $this->cart->add($this->item, 1);
                 $this->code    = 200;
                 $this->status  = 'success';
-                $this->message = _t('SHOP_API_MESSAGES.WishListItemMoved', 'Item moved from wishlist to cart successfully.');
+                $this->message = _t('SHOP_API_MESSAGES.WishListItemMovedToCart', 'Item moved from wishlist to cart successfully.');
 
                 $this->cart_updated = true;
 
@@ -170,7 +174,7 @@ class WishListItemModel extends ProductModel
 
                 $this->code    = 200;
                 $this->status  = 'success';
-                $this->message = _t('SHOP_API_MESSAGES.WishListItemMoved', 'Item moved from your cart to your wish list successfully.');
+                $this->message = _t('SHOP_API_MESSAGES.WishListItemMovedToWishlist', 'Item moved from your cart to your wish list successfully.');
 
                 $this->cart_updated = true;
 
@@ -183,6 +187,7 @@ class WishListItemModel extends ProductModel
             }
 
             $wishList = array_unique($wishList);
+
             $session->set('wishList', $wishList);
 
 
